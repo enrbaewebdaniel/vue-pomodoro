@@ -1,0 +1,23 @@
+.main-container{
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.main-container button{
+    min-width: 95px;
+}
+
+.pomodoro-image img{
+    width: 50%;
+    margin: 0 auto;
+    display: block;
+}
+
+.pomodoro-counter .contador{
+    font-size: 5rem;
+}
+
