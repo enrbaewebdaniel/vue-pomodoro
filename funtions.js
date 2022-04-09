@@ -2,49 +2,44 @@ const app = new Vue({
   el: "#app",
   data: {
     minutosPerCiclo: 25,
-    minutosPerDescanso: 25,
+    minutosPerDescanso: 5,
     actualFase: 4,
     minutes: 0,
     seconds: 0,
     paused: false,
     ciclo: 0,
     cicloCounter: 0,
+    timer: 0,
   },
 
   methods: {
     resetTimer() {
+      this.timer = 0;
       this.minutes = 0;
       this.seconds = 0;
       this.cicloCounter = 0;
       this.actualFase = 4;
-      this.paused = false;
     },
-    waiter(minutes) {
-      this.minutes = minutes;
-      this.seconds = 0;
 
-      console.log("entra");
+    waiter() {
+      console.log("entre en el metodo");
 
-      while (this.minutes <= this.minutosPerCiclo) {
-        this.seconds = 60;
-        console.log("entra1");
-        while (this.seconds <= 60) {
-          console.log("entra2");
-          this.syncDelay(1000);
+      return new Promise(() => {
+        this.timer = setInterval(() => {
+          if (this.minutes < 0) {
+            clearInterval(timer);
+          }
+
+          if (this.seconds <= 0) {
+            this.minutes--;
+            this.seconds = 60;
+          }
+
           this.seconds--;
-        }
-
-        this.minutes--;
-      }
+        }, 1000);
+      });
     },
-    syncDelay(milliseconds) {
-      var start = new Date().getTime();
-      var end = 0;
-      while (end - start < milliseconds) {
-        end = new Date().getTime();
-      }
-    },
-    startTimer() {
+    async startTimer() {
       this.resetTimer();
       this.cicloCounter++;
       this.actualFase = 1;
@@ -54,11 +49,12 @@ const app = new Vue({
       while (this.cicloCounter <= this.ciclo) {
         console.log("va a empezar");
 
-        this.waiter(this.minutosPerCiclo);
+        await this.waiter();
 
+        //FIXME  -- ARREGLAR EL TIEMPO DE DESCANSO Y REVISAR LOS CICLOS
         alert("Empieza el tiempo de descanso");
-
-        this.waiter(this.minutosPerDescanso);
+        this.minutes = this.minutosPerDescanso;
+        await this.waiter();
 
         this.cicloCounter++;
       }
